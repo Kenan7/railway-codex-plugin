@@ -1,0 +1,24 @@
+{
+  "name": "railway-control-room",
+  "version": "0.1.0",
+  "description": "Use Railway from ChatGPT Work through Railway's official remote MCP.",
+  "author": {
+    "name": "Kenan7"
+  },
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Railway Control Room",
+    "shortDescription": "Use Railway without leaving ChatGPT Work.",
+    "longDescription": "A tiny plugin wrapper around Railway's official remote MCP. Check services, deployments, and logs; Railway handles the OAuth connection.",
+    "developerName": "Kenan7",
+    "category": "Developer Tools",
+    "capabilities": ["Interactive", "OAuth", "Read", "Write with confirmation"],
+    "defaultPrompt": [
+      "What needs my attention in Railway right now?",
+      "Explain why my latest Railway deployment failed.",
+      "Show my services and their current deployment health."
+    ],
+    "brandColor": "#8B5CF6"
+  },
+  "mcpServers": "./.mcp.json"
+}
