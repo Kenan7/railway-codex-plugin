@@ -1,63 +1,77 @@
-# Railway × ChatGPT Work
+# Railway MCP for ChatGPT Work
 
-Railway already has a good remote MCP server. This repo is the missing little wrapper that makes it usable as a ChatGPT Work plugin — especially when you are on your phone and do not have a terminal open.
+Railway already has an official remote MCP server.
 
-## The whole idea
+This repo is a small plugin package that points ChatGPT/Codex at it — useful for the moment when you are away from your terminal and just want to ask:
 
-You should be able to say:
+> why did my deploy fail?
 
-> why did my Railway deploy fail?
+No copied API. No token pasted into chat. No fake “AI cloud dashboard.”
 
-...and get the answer from your actual Railway project, without copying logs around or opening your laptop.
+## What is here
 
-This plugin connects ChatGPT Work to Railway's own MCP endpoint:
+- Railway's official hosted MCP endpoint: `https://mcp.railway.com`
+- Railway OAuth for account, workspace, and project access
+- Guidance for safe reads first: projects, services, deployment state, and logs
+- Explicit confirmation before actions such as redeploying
 
-`https://mcp.railway.com`
+## What it is trying to unlock
 
-Railway still owns the important bits: login, permissions, workspaces, projects, audit trail, and the tools themselves. This repo does **not** rebuild any of that.
+From ChatGPT Work, you should be able to ask things like:
 
-## What you can ask
-
-- What is broken in my Railway account right now?
-- Why did the latest deployment fail?
+- What is unhealthy in my Railway account?
+- Why did my last deploy fail?
 - Show my projects and services.
-- Pull logs for this service and explain them like a human.
-- Redeploy the staging worker. *(ChatGPT should ask before changing anything.)*
+- Read these logs and explain the likely cause.
+- Redeploy the staging worker.
 
-## What this is not
+Railway stays in charge of the real permission boundary. Its OAuth flow decides which workspaces and projects the user authorizes.
 
-- not an official Railway product — yet
-- not a proxy that stores your Railway token
-- not a fake dashboard
-- not another API wrapper that will drift from Railway
+## Important: current status
 
-It is intentionally boring and thin. That is a feature.
+This is **not an official Railway plugin**.
+
+The MCP connection is real and uses Railway's documented endpoint. What still needs testing is the last mile: whether ChatGPT Work can install this package cleanly and complete Railway OAuth on mobile. Until that is verified and reviewed, treat this as an experimental integration package — not a finished public product.
+
+## Why not just build a new Railway connector?
+
+Because Railway already solved the difficult part: OAuth, scoped access, audit context, and the tool layer.
+
+Rebuilding that would mean storing credentials or maintaining a second version of Railway's API surface. This repo does neither. It is deliberately small.
 
 ## How it works
 
 ```text
-ChatGPT Work → this plugin → Railway remote MCP → Railway OAuth → your scoped Railway projects
+ChatGPT / Codex
+        ↓
+this plugin package
+        ↓
+Railway remote MCP
+        ↓
+Railway OAuth
+        ↓
+the Railway projects the user chose to share
 ```
 
-No API key goes in this repo. Railway's OAuth screen is where the user decides what ChatGPT can access.
+## What this repo does **not** do
 
-## Why make this if Railway already has MCP?
+- It does not store a Railway API key.
+- It does not proxy or copy Railway data.
+- It does not claim Railway endorsement.
+- It does not make production changes silently.
 
-Railway supports Codex/other coding tools through MCP config. But ChatGPT Work users — particularly mobile users — need a discoverable plugin package, not a terminal command.
+## If you work at Railway
 
-That is the gap this is trying to close.
+This is meant to be easy to adopt, replace, or improve. If there is a better way to package the existing MCP for ChatGPT Work, that is the preferred outcome.
 
-## Status
-
-Early, but real. The package validates and points at Railway's documented remote MCP endpoint. The remaining work is testing the OAuth link inside ChatGPT Work and getting it published/reviewed.
-
-## For Railway
-
-If you work at Railway: please feel free to take this over, fold it into your own plugin distribution, or tell me what needs changing. The goal is not to own a Railway integration; it is to make the existing one easier to use.
-
-## Local validation
+## Validate it
 
 ```bash
-python3 /root/.codex/skills/.system/plugin-creator/scripts/validate_plugin.py plugins/railway-control-room
-node plugins/railway-control-room/scripts/verify-plugin.mjs
+python3 /root/.codex/skills/.system/plugin-creator/scripts/validate_plugin.py .
+node scripts/verify-plugin.mjs
 ```
+
+## Useful links
+
+- [Railway MCP docs](https://docs.railway.com/ai/mcp-server)
+- [Railway MCP CLI reference](https://docs.railway.com/cli/mcp)
